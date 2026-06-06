@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+  <title>BOLETAS ZR MEDIC</title>
+
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=chillax@400,500,600,700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+
+    html,
+    body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Chillax', sans-serif;
+      background: #ffffff;
+      color: #333333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    :root {
+      --side-padding: clamp(32px, 25vw, 480px);
+      --azul-logo: #0EA9D6;
+      --turquesa: #0eb4e0;
+    }
+
+    .nav {
+      display: flex;
+      gap: 80px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px var(--side-padding);
+      
+    }
+
+    .nav img {
+      width: 260px;
+    }
+
+    .doc {
+      display: flex;
+      justify-content: center;
+    }
+
+    .doc-info {
+      text-align: center;
+    }
+
+    .doc-info h1 {
+      font-weight: 700;
+      color: var(--azul-logo);
+      margin-bottom: 18px;
+      font-size: 42px
+    }
+
+    .doc-info p {
+      color: #9B9B9B;
+      font-size: 18px;
+      margin-bottom: 18px;
+      font-weight: 400;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .btn {
+      font-family: 'Chillax', sans-serif;
+      color: white;
+      font-size: 16px;
+      font-weight: 900;
+      font-style: italic;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.55);
+      border: 2px solid #fff;
+      border-radius: 18px;
+      min-width: 180px;
+      height: 42px;
+      cursor: pointer;
+      background: linear-gradient(
+        to bottom,
+        #8d8d8d 0%,
+        #d8d8d8 42%,
+        #555555 52%,
+        #9f9f9f 100%
+      );
+      box-shadow:
+        0 2px #7c7c7c,
+        0 5px 10px rgba(0, 0, 0, 0.22);
+      transition: background 0.3s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    .btn:hover,
+    .activo,
+    .btn-buscar {
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.85) 0%,
+          rgba(255, 255, 255, 0.25) 48%,
+          rgba(255, 255, 255, 0) 52%
+        ),
+        linear-gradient(
+          to bottom,
+          #10f0ee 0%,
+          #09c8d8 40%,
+          #078dad 62%,
+          #02ccdc 100%
+        );
+        position: relative;
+    overflow: hidden;
+   
+    }
+ 
+    .btn-buscar::before{
+        content: "";
+        top: 0;
+        left: -80%;
+        width: 65%;
+        
+        position: absolute;
+        
+       
+        height: 100%;
+        background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.85),
+    transparent
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+    }
+
+    .btn-buscar:hover::before  {
+       animation: flashBtn 0.8s ease;
+       
+    }
+@keyframes flashBtn {
+  from {
+    left: -80%;
+  }
+
+  to {
+    left: 130%;
+  }
+}
+    .filtros {
+      width: min(540px, 92vw);
+      margin: 30px auto;
+      padding: 8px;
+      background: #11aeda;
+      border: 4px solid #d8d8d8;
+      border-radius: 26px;
+      box-shadow: 8px 8px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    .filtro-titulo {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.42);
+      font-size: 18px;
+      font-weight: 800;
+      font-style: italic;
+    }
+
+     
+
+    .filtro-todo {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 34px 42px 24px;
+    }
+
+    .campo {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .campo label {
+      color: #8f8f8f;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .campo input,
+    .campo select {
+      outline: 2px solid var(--turquesa);
+      border-radius: 5px;
+      padding: 0 10px;
+      color: #777777;
+      border: none;
+      font-family: 'Chillax', sans-serif;
+      width: 100%;
+      height: 31px;
+      font-size: 13px;
+    }
+
+    .serie-numero {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .serie-numero span {
+      color: var(--turquesa);
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    #grupoNumero {
+      width: 100%;
+    }
+
+    .btn-buscar {
+      display: block;
+      margin: 26px auto 0;
+      min-width: 190px;
+    }
+
+    .captcha-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      align-items: center;
+      gap: 20px;
+      margin: 25px 0;
+    }
+
+    .captcha-box {
+      width: 140px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e5e5e5;
+      color: #111;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      letter-spacing: 4px;
+      font-style: italic;
+      user-select: none;
+    }
+
+    .captcha-input label {
+      display: block;
+      margin-bottom: 6px;
+      color: #9b9b9b;
+      font-size: 11px;
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    .captcha-input input {
+      width: 180px;
+      height: 32px;
+      border: 2px solid var(--turquesa);
+      border-radius: 8px;
+      outline: none;
+      padding: 0 10px;
+    }
+
+    .resultados {
+      display: none;
+      width: min(1000px, 92vw);
+      margin: 25px auto;
+    }
+
+    .estado {
+      margin: 10px 0;
+      font-weight: bold;
+      color: #374151;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+       border-spacing: 0;
+      background: white;
+      font-size: 12px;
+      margin: auto;
+        overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,.08);
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      vertical-align: top;
+     text-align: center;
+    }
+
+    th {
+      background: #e5e7eb;
+       
+    }
+
+    .acciones {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .acciones button {
+      padding: 7px 10px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn-verde {
+       background:  #0EA9D6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+        transition: all 0.3s;
+        margin: auto;
+       box-shadow: 0 5px 12px rgba(0,0,0,.18);
+    }
+
+    .btn-descargar {
+       background: #f59e0b;
+       color: white;
+       border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-xml {
+       background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer; 
+  transition: all 0.3s;
+    }
+.btn-verde:hover,
+.btn-descargar:hover,
+.btn-xml:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0,0,0,.18);
+}
+    iframe {
+      width: 100%;
+      height: 700px;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      background: white;
+    }
+
+    .error-campo {
+      outline: 2px solid red !important;
+    }
+footer {
+  width: 100%;
+  padding: 25px var(--side-padding);
+  background: #ffffff;
+  border-bottom: 2px solid #222222;
+}
+footer p{
+  text-align: center;
+  color: #adabab;
+  font-weight: 500;
+  margin: 10px;
+}
+    .marcas {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .marcas img {
+      height: 42px;
+      max-width: 70px;
+      object-fit: contain;
+      opacity: 0.75;
+      filter: grayscale(1);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .marcas img:hover {
+      opacity: 1;
+      filter: none;
+      transform: scale(1.5);
+    }
+
+    @media (max-width: 1020px) {
+      footer {
+        padding: 20px 8%;
+      }
+
+      .marcas {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .nav {
+        padding: 25px 10%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .actions {
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 8%;
+      }
+
+      .doc-info h1 {
+        font-size: 28px;
+      }
+      .btn {
+        min-width: 240px;
+      }
+      .nav {
+      display: flex;
+      align-items: center;
+      padding: 15px 0%;
+      
+    }
+    footer {
+  
+  padding: 25px 0%;
+  background: #ffffff;
+  border-bottom: 2px solid #222222;
+}
+ .doc {
+        padding-top:  10px;
+      }
+       .info-nav{
+        display: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .filtro-titulo {
+        font-size: 20px;
+      }
+
+      .filtro-titulo span {
+        width: 30px;
+      }
+
+      .filtro-todo {
+        padding: 26px 20px 24px;
+      }
+
+      .campo,
+      .captcha-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .captcha-input input {
+        width: 100%;
+      }
+       .info-nav{
+        display: none;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .doc {
+        padding-top:  10px;
+      }
+
+      .doc-info h1 {
+        font-size: 26px;
+      }
+
+      .btn {
+        width: 230px;
+        margin: auto;
+      }
+
+      .marcas {
+        gap: 12px 12px;
+      }
+
+      .marcas img {
+        height: 26px;
+      }
+      .info-nav{
+        display: none;
+      }
+    }
+    .contenido {
+  flex: 1;
+}
+.resultados {
+  scroll-margin-top: 40px;
+}
+#visorPdf {
+  scroll-margin-top: 40px;
+}
+.intro-logo {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  overflow: hidden;
+  animation: introSalir 0.7s ease forwards;
+  animation-delay: 3s;
+}
+
+.intro-icon {
+  position: absolute;
+  width: 150px;
+  animation: giroIcono 2.1s ease-in-out forwards;
+}
+
+.intro-full {
+  width: min(620px, 80vw);
+  opacity: 0;
+  transform: scale(0.92);
+  animation: apareceLogo 1s ease forwards;
+  animation-delay: 1.7s;
+}
+
+@keyframes giroIcono {
+  0% {
+    opacity: 1;
+    transform: rotate(0deg) scale(1.1);
+  }
+
+  45% {
+    opacity: 1;
+    transform: rotate(180deg) scale(1);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateX(-220px) rotate(180deg) scale(0.55);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-260px) rotate(180deg) scale(0.35);
+  }
+}
+
+@keyframes apareceLogo {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes introSalir {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+.filtro-todo.animar-cambio{
+    animation: cambioFiltro 0.35s ease;
+}
+@keyframes cambioFiltro {
+    0%{
+       opacity: 0;
+       transform: translateY(12px) scale(0.98);
+    }
+    100%{
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.65);
+}
+
+.modal-contenido {
+  background: white;
+  width: 90%;
+  height: 90%;
+  margin: 30px auto;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 12px 16px;
+  background: #1f2937;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+}
+
+.btn-cerrar {
+  background: #dc2626;
+  color: white;
+}
+
+#visorPdfModal {
+  display: block !important;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  border: none;
+  background: white;
+}
+
+.modal-footer {
+  order: -1;
+  padding: 12px 0px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+  
+
+}
+.modal-footer button {
+  min-width: 145px;
+  padding: 11px 18px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+.modal-footer .btn-descargar{
+  background: #f59e0b;
+}
+.modal-footer .btn-xml {
+  background: #7c3aed;
+}
+.btn-cerrar {
+  min-width: 42px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .modal-contenido {
+    width: 96%;
+    height: 92%;
+    margin: 18px auto;
+  }
+
+  .modal-footer {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+thead{
+  border-radius: 8PX;
+}
+thead th {
+  background: linear-gradient(135deg,#0EA5E9,#0284C7);
+  color: white;
+  padding: 14px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+ 
+}
+
+tbody td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+tbody tr:hover {
+  background: #e0f2fe;
+  transition: .2s;
+}
+
+.archivo {
+  max-width: 260px;
+  word-break: break-word;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.resultados-container {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  margin-top: 20px;
+}
+
+.estado {
+  background: #ecfeff;
+  color: #0c4a6e;
+  padding: 12px 18px;
+  border-left: 5px solid #06b6d4;
+  border-radius: 8px;
+  margin: 15px 0;
+  font-weight: 600;
+}
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .filtros {
+    grid-template-columns: 1fr;
+  }
+
+  .modo-busqueda {
+    flex-direction: column;
+  }
+
+  .modo-btn {
+    width: 100%;
+  }
+
+  th, td {
+    font-size: 11px;
+    padding: 4px 2PX;
+  }
+
+  .acciones {
+    flex-direction: column;
+  }
+
+  .acciones button {
+    width: 100%;
+  }
+
+  .modal-contenido {
+    width: 96%;
+    height: 92%;
+    margin: 15px auto;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer button {
+    width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .tabla-responsive {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  table {
+    width: 100%;
+    min-width: unset !important;
+    table-layout: fixed;
+  }
+
+  th, td {
+    font-size: 12px;
+    padding: 10px 6px;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    display: none;
+  }
+    th:nth-child(2),
+  td:nth-child(2) {
+    width: 70px;
+    padding: 10px 0px;
+ 
+  }
+    th:nth-child(3),
+  td:nth-child(3) {
+    width: 58px;
+    padding: 10px 0px;
+ 
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 75px;
+    padding: 10px 0px;
+ 
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 85px;
+    padding: 10px 0px;
+    
+  }
+
+  th:nth-child(6),
+  td:nth-child(6) {
+    width: 80px;
+    
+  }
+
+  .acciones {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .acciones button {
+    width: 100%;
+    font-size: 11px;
+    padding: 8px 5px;
+  }
+  
+}
+@media (max-width: 768px){
+
+  /* Ocultar columna Serie */
+  .col-serie{
+    display:none;
+  }
+
+  /* Renombrar visualmente la columna Número */
+  .col-documento{
+    width:110px;
+  }
+
+  th,td{
+    font-size:12px;
+    padding:10px 6px;
+  }
+    
+
+    .btn-xml {
+     
+  padding: 0;
+ 
+    }
+
+}
+@media (max-width: 768px) {
+  .modal-contenido {
+    width: 94%;
+    height: 88%;
+    margin: 20px auto;
+    border-radius: 12px;
+  }
+
+  .modal-header {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 1fr 44px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .modal-header h3 {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    text-align: left;
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .btn-cerrar {
+    grid-column: 2 / 3;
+    grid-row: 1;
+    width: 40px;
+    height: 40px;
+    justify-self: end;
+  }
+
+  .modal-acciones {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .modal-acciones .btn-descargar,
+  .modal-acciones .btn-xml {
+    width: 80%;
+    min-width: 0;
+    padding: 11px 8px;
+    font-size: 12px;
+    border-radius: 9px;
+  }
+
+  #visorPdfModal {
+    height: calc(100% - 112px);
+    width: 100%;
+  }
+}
+.fila-fechas{
+    display:flex;
+    gap:15px;
+    width:100%;
+}
+
+.fila-fechas .campo{
+    flex:1;
+}
+
+@media(max-width:768px){
+
+    .fila-fechas{
+        flex-direction:row;
+        gap:10px;
+    }
+
+    .fila-fechas .campo{
+        flex:1;
+    }
+
+    .fila-fechas input{
+        font-size:12px;
+        padding:8px;
+    }
+}
+.fila-fechas {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.fila-fechas > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.fila-fechas input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#grupoCliente input {
+  width: 100%;
+  box-sizing: border-box;
+}
+ .col-serie{
+    display:none;
+  }
+  .paginacion{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+
+.paginacion button{
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  background:#e5e7eb;
+  font-weight:bold;
+}
+
+.paginacion button:hover{
+  background:#d1d5db;
+}
+
+.pagina-activa{
+  background:#06b6d4 !important;
+  color:white;
+}
+.barra-info{
+    width:100%;
+    max-width:1400px;
+    margin:15px auto 40px auto;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:60px;
+
+    flex-wrap:nowrap; /* IMPORTANTE */
+}
+
+.info-item{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    white-space:nowrap;
+}
+
+.info-item i{
+    width:35px;
+    height:35px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    background:#10b6d8;
+    color:#fff;
+    font-size:16px;
+}
+
+.info-item span{
+    display:block;
+    font-size:12px;
+    color:#7a7a7a;
+    font-weight:600;
+}
+
+.info-item strong{
+    display:block;
+    font-size:15px;
+    color:#222;
+    font-weight: 600;
+}
+  </style>
+</head>
+
+<body>
+    <div id="introLogo" class="intro-logo">
+  <img
+    class="intro-icon"
+    src="img/NUEVO-LOGO-ZR-MEDIC---EDITABLE.png"
+    alt="Icono ZR Medic"
+  >
+  
+  <img
+    class="intro-full"
+    src="img/Logo ZR MEDIC.png"
+    alt="Logo ZR Medic"
+  >
+</div>
+  <div class="nav">
+    <a href="https://zrmedic.pe/"><img src="img/Logo-zr.png" alt="Logo ZR Medic"></a>
+    <div class="barra-info">
+
+    <div class="info-item">
+       <i class="fa-solid fa-phone"></i>
+        <div class="info-nav">
+            <span>LLÁMENOS</span>
+            <strong>+51 994 114 560</strong>
+        </div>
+    </div>
+
+    <div class="info-item">
+        <i class="fas fa-envelope"></i>
+        <div class="info-nav">
+            <span>ESCRÍBANOS</span>
+            <strong>cotizaciones@zrmedic.pe</strong>
+        </div>
+    </div>
+
+    <div class="info-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <div class="info-nav">
+            <span>VISÍTENOS</span>
+            <strong>Av. Tacna 582 Cercado de Lima</strong>
+        </div>
+    </div>
+
+    
+
+</div>
+     
+</div>
+</div>
+  </div>
+<main class="contenido"> 
+  <div class="doc">
+    <div class="doc-info">
+      <h1>CONSULTAR DOCUMENTOS</h1>
+      <p>Buscar por</p>
+
+      <div class="actions">
+        <button
+          type="button"
+          id="btnDocumento"
+          class="btn activo"
+          onclick="cambiarModoBusqueda('documento')"
+        >
+          N° DOCUMENTO
+        </button>
+
+        <button
+          type="button"
+          id="btnCliente"
+          class="btn"
+          onclick="cambiarModoBusqueda('cliente')"
+        >
+          RUC / DNI
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filtros">
+    <div class="filtro-titulo">
+      <span></span>
+      <h2 id="tituloFiltro">N° Documento</h2>
+      <span></span>
+    </div>
+
+    <div class="filtro-todo">
+      <div id="grupoTipo" class="campo">
+        <label>Tipo de Documento:</label>
+        <select id="filtroTipo">
+          <option value="">Seleccione</option>
+          <option value="FACTURA ELECTRONICA">Factura</option>
+          <option value="BOLETA ELECTRONICA">Boleta de Venta</option>
+          <option value="NOTA DE CREDITO">Nota de crédito</option>
+        </select>
+      </div>
+
+      <div id="grupoSerie" class="campo campo-documento">
+        <label>N° Documento:</label>
+
+        <div class="serie-numero">
+          <input type="text" id="filtroSerie" placeholder="FE01">
+          <span>-</span>
+
+          <div id="grupoNumero">
+            <input type="text" id="filtroNumero" placeholder="10151">
+          </div>
+        </div>
+      </div>
+   <div class="campo" id="grupoFecha" >
+  <label>Fecha Emisión:</label>
+  <input
+    type="date"
+    id="filtroFechaEmision"
+  >
+</div>
+      <div id="grupoMonto" class="campo">
+        <label>Monto Total:</label>
+        <input
+          type="text"
+          id="filtroMonto"
+          placeholder="159.90"
+          onblur="this.value = normalizarMontoInput(this.value)"
+        >
+      </div>
+
+      <div id="grupoCliente" class="campo" style="display:none;">
+        <label>N° DNI o RUC:</label>
+        <input type="text" id="filtroCliente" placeholder="DNI o RUC">
+      </div>
+ <div class="fila-fechas">
+  <div class="campo" id="grupoFechaDesde" style="display:none;">
+    <label>Desde</label>
+    <input type="date" id="filtroFechaDesde">
+  </div>
+
+  <div class="campo" id="grupoFechaHasta" style="display:none;">
+    <label>Hasta</label>
+    <input type="date" id="filtroFechaHasta">
+  </div>
+</div>
+
+ 
+      <div class="captcha-row">
+        <div class="captcha-box" id="captchaCode"></div>
+
+        <div class="captcha-input">
+          <label>Ingrese el texto que aparece en la imagen</label>
+          <input type="text" id="captchaInput">
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-buscar" onclick="aplicarFiltros()">
+        Buscar
+      </button>
+    </div>
+  </div>
+
+  <div id="resultados" class="resultados">
+    <div id="estado" class="estado"></div>
+<div class="tabla-responsive"> 
+    <table>
+      <thead>
+        <tr>
+           
+          <th class="col-serie">Serie</th>
+          <th class="col-documento">Número</th>
+          <th>Monto</th>
+          <th>Fecha Emisión</th>
+          <th>Documentos</th>
+        </tr>
+      </thead>
+
+      <tbody id="tablaDocumentos"></tbody>
+    </table>
+  <div id="paginacion" class="paginacion"></div>
+  </div>
+
+  <div id="modalPdf" class="modal">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h3>Vista previa del PDF</h3>
+    
+      <button class="btn-cerrar" onclick="cerrarModalPdf()">X</button>
+        <div class="modal-footer">
+      <button class="btn-descargar" id="btnDescargarPdf">Descargar PDF</button>
+      <button class="btn-xml" id="btnDescargarXml">Descargar XML</button>
+    </div>
+    </div>
+     
+    <iframe id="visorPdfModal"></iframe>
+
+    
+  </div>
+</div>
+  </div>
+</main>
+  <footer>
+    <p>Puntos de venta autorizados</p>
+    <div class="marcas">
+      <img src="img/Mesa de trabajo 1.png" alt="DCM">
+      <img src="img/Mesa de trabajo 2.png" alt="">
+      <img src="img/Mesa de trabajo 3.png" alt="">
+      <img src="img/Mesa de trabajo 4.png" alt="">
+      <img src="img/Mesa de trabajo 5.png" alt="">
+      <img src="img/Mesa de trabajo 6.png" alt="">
+      <img src="img/Mesa de trabajo 7.png" alt="">
+      <img src="img/Mesa de trabajo 8.png" alt="">
+      <img src="img/Mesa de trabajo 9.png" alt="">
+      <img src="img/Mesa de trabajo 10.png" alt="">
+      <img src="img/Mesa de trabajo 11.png" alt="">
+      <img src="img/Mesa de trabajo 18.png" alt="">
+      <img src="img/Mesa de trabajo 17.png" alt="">
+      <img src="img/Mesa de trabajo 13.png" alt="">
+      <img src="img/Mesa de trabajo 14.png" alt="">
+      <img src="img/Mesa de trabajo 15.png" alt="">
+      <img src="img/Mesa de trabajo 16.png" alt="">
+    </div>
+  </footer>
+
+  <script>
+    const API_URL = "http://localhost:3000";
+
+    let captchaActual = "";
+    let modoBusqueda = "documento";
+    let documentosOriginales = [];
+    let paginaActual = 1;
+const registrosPorPagina = 15;
+let documentosFiltrados = [];
+    let documentosCargados = false;
+
+    function generarCaptcha() {
+      const letras = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+      captchaActual = "";
+
+      for (let i = 0; i < 5; i++) {
+        captchaActual += letras[Math.floor(Math.random() * letras.length)];
+      }
+
+      document.getElementById("captchaCode").textContent =
+        captchaActual.split("").join(" ");
+    }
+
+    function validarCaptcha() {
+      const valor = document.getElementById("captchaInput").value.trim().toUpperCase();
+
+      if (valor !== captchaActual) {
+        alert("Captcha incorrecto");
+        generarCaptcha();
+        document.getElementById("captchaInput").value = "";
+        return false;
+      }
+
+      return true;
+    }
+
+    function cambiarModoBusqueda(modo) {
+      modoBusqueda = modo;
+
+      document.getElementById("btnDocumento").classList.remove("activo");
+      document.getElementById("btnCliente").classList.remove("activo");
+
+      const tituloFiltro = document.getElementById("tituloFiltro");
+
+      if (modo === "documento") {
+        tituloFiltro.textContent = "N° Documento";
+
+        document.getElementById("btnDocumento").classList.add("activo");
+        document.getElementById("grupoTipo").style.display = "grid";
+        document.getElementById("grupoSerie").style.display = "grid";
+        document.getElementById("grupoMonto").style.display = "grid";
+        document.getElementById("grupoCliente").style.display = "none";
+         document.getElementById("grupoFecha").style.display = "grid";
+      document.getElementById("grupoFechaDesde").style.display = "none";
+document.getElementById("grupoFechaHasta").style.display = "none";
+
+        
+      } else {
+        tituloFiltro.textContent = "RUC / DNI";
+
+        document.getElementById("btnCliente").classList.add("activo");
+        document.getElementById("grupoTipo").style.display = "none";
+        document.getElementById("grupoSerie").style.display = "none";
+        document.getElementById("grupoMonto").style.display = "none";
+        document.getElementById("grupoCliente").style.display = "grid";
+         document.getElementById("grupoFecha").style.display = "none";
+       document.getElementById("grupoFechaDesde").style.display = "block";
+  document.getElementById("grupoFechaHasta").style.display = "block";
+        }
+animarCambioFiltro();
+      limpiarFiltros();
+    }
+
+    async function cargarDocumentos() {
+      const tbody = document.getElementById("tablaDocumentos");
+      const estado = document.getElementById("estado");
+
+      try {
+        estado.textContent = "Cargando documentos...";
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">Cargando documentos...</td>
+          </tr>
+        `;
+
+        const response = await fetch(`${API_URL}/documentos`);
+
+        if (!response.ok) {
+          throw new Error("No se pudo conectar con el servidor");
+        }
+
+        const documentos = await response.json();
+        documentosOriginales = Array.isArray(documentos) ? documentos : [];
+        estado.textContent = "";
+
+        return true;
+      } catch (error) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">Error cargando documentos</td>
+          </tr>
+        `;
+        estado.textContent = "Error cargando documentos.";
+        console.error(error);
+
+        return false;
+      }
+    }
+
+    async function aplicarFiltros() {
+      if (!validarCaptcha()) return;
+
+      document.getElementById("resultados").style.display = "block";
+
+      if (!documentosCargados) {
+        const ok = await cargarDocumentos();
+
+        if (!ok) return;
+
+        documentosCargados = true;
+      }
+
+      if (modoBusqueda === "documento") {
+        buscarPorDocumento();
+      } else {
+        buscarPorCliente();
+      }
+      document.getElementById("resultados").scrollIntoView({
+  behavior: "smooth",
+  block: "start"
+});
+    }
+   
+    function buscarPorDocumento() {
+      limpiarErrores();
+
+      const tipo = document.getElementById("filtroTipo").value.trim();
+      const serie = document.getElementById("filtroSerie").value.trim();
+      const numero = document.getElementById("filtroNumero").value.trim();
+      const inputMonto = document.getElementById("filtroMonto");
+      const monto = normalizarMontoInput(inputMonto.value);
+const fechaEmision = document
+  .getElementById("filtroFechaEmision")
+  .value;
+      inputMonto.value = monto;
+
+      let errores = [];
+
+      if (!tipo) {
+        errores.push("Tipo de documento");
+        document.getElementById("filtroTipo").classList.add("error-campo");
+      }
+
+      if (!serie) {
+        errores.push("Serie");
+        document.getElementById("filtroSerie").classList.add("error-campo");
+      }
+
+      if (!numero) {
+        errores.push("Número");
+        document.getElementById("filtroNumero").classList.add("error-campo");
+      }
+
+      if (!monto) {
+        errores.push("Monto");
+        document.getElementById("filtroMonto").classList.add("error-campo");
+      }
+      if (!fechaEmision) {
+  errores.push("Fecha de emisión");
+  document
+    .getElementById("filtroFechaEmision")
+    .classList.add("error-campo");
+}
+
+      if (errores.length > 0) {
+        alert("Debe completar:\n\n- " + errores.join("\n- "));
+        ocultarResultadosVacios();
+        return;
+      }
+
+      const filtrados = documentosOriginales.filter((doc) => {
+        const docTipo = (doc.tipo_documento || "").toLowerCase();
+        const docSerie = (doc.serie || "").toLowerCase();
+        const docNumero = (doc.correlativo || "").toLowerCase();
+        const docMonto = String(doc.monto || "").replace(",", ".");
+const docFecha = String(doc.fecha_emision || "")
+  .substring(0, 10);
+        return (
+          docTipo.includes(tipo.toLowerCase()) &&
+          docSerie === serie.toLowerCase() &&
+          docNumero === numero.toLowerCase() &&
+          Number(docMonto) === Number(monto)&& docFecha === fechaEmision
+        );
+      });
+paginaActual = 1;
+      renderizarTabla(filtrados);
+
+      document.getElementById("estado").textContent =
+        `Resultados encontrados: ${filtrados.length}`;
+    }
+
+  function buscarPorCliente() {
+  const cliente = document.getElementById("filtroCliente").value.trim();
+  const fechaDesde = document.getElementById("filtroFechaDesde").value;
+  const fechaHasta = document.getElementById("filtroFechaHasta").value;
+
+  if (!cliente) {
+    alert("Debe ingresar el DNI o RUC del cliente.");
+    document.getElementById("filtroCliente").classList.add("error-campo");
+    return;
+  }
+
+  const filtrados = documentosOriginales.filter((doc) => {
+    const rucCliente = String(doc.ruc_cliente || "").trim();
+    const dniCliente = String(doc.dni_cliente || "").trim();
+
+    const coincideCliente =
+      rucCliente === cliente || dniCliente === cliente;
+
+    const docFecha = String(doc.fecha_emision || "").substring(0, 10);
+
+    let coincideFecha = true;
+
+    if (fechaDesde && docFecha < fechaDesde) {
+      coincideFecha = false;
+    }
+
+    if (fechaHasta && docFecha > fechaHasta) {
+      coincideFecha = false;
+    }
+
+    return coincideCliente && coincideFecha;
+  });
+paginaActual = 1;
+  renderizarTabla(filtrados);
+
+  document.getElementById("estado").textContent =
+    `Resultados encontrados : ${filtrados.length}`;
+}
+
+  function renderizarTabla(documentos) {
+
+  documentosFiltrados = documentos;
+
+  const tbody = document.getElementById("tablaDocumentos");
+  tbody.innerHTML = "";
+
+  if (!Array.isArray(documentos) || documentos.length === 0) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5">
+          No se encontraron documentos
+        </td>
+      </tr>
+    `;
+
+    document.getElementById("paginacion").innerHTML = "";
+    return;
+  }
+
+  const inicio = (paginaActual - 1) * registrosPorPagina;
+  const fin = inicio + registrosPorPagina;
+
+  const documentosPagina =
+    documentos.slice(inicio, fin);
+
+  documentosPagina.forEach((doc) => {
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td class="col-serie">
+        ${doc.serie || "-"}
+      </td>
+
+      <td class="col-documento">
+        ${doc.serie && doc.correlativo
+          ? `${doc.serie}-${doc.correlativo}`
+          : doc.numero || "-"}
+      </td>
+
+      <td>${doc.monto || "-"}</td>
+
+      <td>
+        ${formatearFecha(doc.fecha_emision)}
+      </td>
+
+      <td>
+        <div class="acciones">
+          <button
+            class="btn-verde"
+            onclick="verPdf(${doc.id})">
+            VER
+          </button>
+        </div>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+
+  });
+
+  renderizarPaginacion();
+}
+function renderizarPaginacion() {
+
+  const totalPaginas =
+    Math.ceil(
+      documentosFiltrados.length /
+      registrosPorPagina
+    );
+
+  let html = "";
+
+  if (totalPaginas <= 1) {
+    document.getElementById("paginacion").innerHTML = "";
+    return;
+  }
+
+  html += `
+    <button
+      onclick="cambiarPagina(${paginaActual - 1})"
+      ${paginaActual === 1 ? "disabled" : ""}
+    >
+      ◀
+    </button>
+  `;
+
+  for (let i = 1; i <= totalPaginas; i++) {
+
+    html += `
+      <button
+        class="${i === paginaActual ? "pagina-activa" : ""}"
+        onclick="cambiarPagina(${i})"
+      >
+        ${i}
+      </button>
+    `;
+  }
+
+  html += `
+    <button
+      onclick="cambiarPagina(${paginaActual + 1})"
+      ${paginaActual === totalPaginas ? "disabled" : ""}
+    >
+      ▶
+    </button>
+  `;
+
+  document.getElementById("paginacion").innerHTML =
+    html;
+}
+function cambiarPagina(pagina) {
+
+  const totalPaginas =
+    Math.ceil(
+      documentosFiltrados.length /
+      registrosPorPagina
+    );
+
+  if (pagina < 1 || pagina > totalPaginas) {
+    return;
+  }
+
+  paginaActual = pagina;
+
+  renderizarTabla(documentosFiltrados);
+}
+    function limpiarFiltros() {
+      const campos = [
+        "filtroTipo",
+        "filtroSerie",
+        "filtroNumero",
+        "filtroMonto",
+        "filtroCliente",
+        "captchaInput"
+      ];
+
+      campos.forEach((id) => {
+        const campo = document.getElementById(id);
+        if (campo) campo.value = "";
+      });
+
+      limpiarErrores();
+
+      const resultados = document.getElementById("resultados");
+      if (resultados) resultados.style.display = "none";
+
+      const tabla = document.getElementById("tablaDocumentos");
+      if (tabla) tabla.innerHTML = "";
+
+      const estado = document.getElementById("estado");
+      if (estado) estado.textContent = "";
+      const fechaDesde = document.getElementById("filtroFechaDesde");
+if (fechaDesde) fechaDesde.value = "";
+
+const fechaHasta = document.getElementById("filtroFechaHasta");
+if (fechaHasta) fechaHasta.value = "";
+      cerrarModalPdf();
+
+      generarCaptcha();
+    }
+
+    function limpiarErrores() {
+      document
+        .querySelectorAll("input, select")
+        .forEach((campo) => campo.classList.remove("error-campo"));
+    }
+
+    function ocultarResultadosVacios() {
+      document.getElementById("tablaDocumentos").innerHTML = "";
+      document.getElementById("estado").textContent = "";
+    }
+
+function verPdf(id) {
+  const doc = documentosOriginales.find((d) => Number(d.id) === Number(id));
+
+  const modal = document.getElementById("modalPdf");
+  const visor = document.getElementById("visorPdfModal");
+  const btnPdf = document.getElementById("btnDescargarPdf");
+  const btnXml = document.getElementById("btnDescargarXml");
+
+  if (!modal || !visor) {
+    alert("No se encontró el visor PDF.");
+    return;
+  }
+
+  visor.src = `${API_URL}/documentos/${id}/pdf?t=${Date.now()}`;
+
+  if (btnPdf) {
+    btnPdf.onclick = function () {
+      descargarPdf(id);
+    };
+  }
+
+  if (btnXml) {
+    if (doc && doc.archivo_xml) {
+      btnXml.style.display = "inline-block";
+      btnXml.onclick = function () {
+        descargarXml(id);
+      };
+    } else {
+      btnXml.style.display = "none";
+      btnXml.onclick = null;
+    }
+  }
+
+  modal.style.display = "block";
+}
+
+function cerrarModalPdf() {
+  const modal = document.getElementById("modalPdf");
+  const visor = document.getElementById("visorPdfModal");
+
+  if (modal) modal.style.display = "none";
+  if (visor) visor.src = "";
+}
+    function descargarPdf(id) {
+      window.open(`${API_URL}/documentos/${id}/descargar`, "_blank");
+    }
+
+    function descargarXml(id) {
+      window.open(`${API_URL}/documentos/${id}/xml`, "_blank");
+    }
+
+    function normalizarMontoInput(valor) {
+      if (!valor) return "";
+
+      let limpio = valor
+        .trim()
+        .replace(/\s/g, "")
+        .replace(",", ".");
+
+      const numero = Number(limpio);
+
+      if (isNaN(numero)) {
+        return "";
+      }
+
+      return numero.toFixed(2);
+    }
+
+    function formatearFecha(fecha) {
+      if (!fecha) return "-";
+
+      const soloFecha = String(fecha).split("T")[0];
+      const partes = soloFecha.split("-");
+
+      if (partes.length === 3) {
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      }
+
+      return soloFecha;
+    }
+
+    generarCaptcha();
+  
+  setTimeout(() => {
+  const intro = document.getElementById("introLogo");
+
+  if (intro) {
+    intro.remove();
+  }
+}, 3800);
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+    cerrarModalPdf();
+  }
+});
+
+window.addEventListener("click", function (event) {
+  const modal = document.getElementById("modalPdf");
+  if (event.target === modal) {
+    cerrarModalPdf();
+  }
+});
+
+function animarCambioFiltro() {
+  const filtro = document.querySelector(".filtro-todo");
+
+  filtro.classList.remove("animar-cambio");
+
+  void filtro.offsetWidth;
+
+  filtro.classList.add("animar-cambio");
+}
+</script>
+</body>
+</html>
